@@ -6,15 +6,18 @@ import java.util.ArrayList;
  * @author Mauricio Toro, Mateo Agudelo, <su nombre>
  */
 public class DigraphAM extends Digraph {
-	
+  int size;
+  int matriz[][];
 
 	/**
 	* Constructor para el grafo dirigido
 	* @param vertices el numero de vertices que tendra el grafo dirigido
 	*
 	*/
-	public DigraphAM(int size) {
-		super(size);
+ public DigraphAM(int size) {
+		/**super(size);*/
+    this.size = size;
+    matriz= new int[size][size];
 	
 	}
 
@@ -25,8 +28,9 @@ public class DigraphAM extends Digraph {
 	* @param destination hacia donde va el arco
 	* @param weight el peso de la longitud entre source y destination
 	*/
-	public void addArc(int source, int destination, int weight) {
-		
+ public void addArc(int source, int destination, int weight) {
+    matriz[source][destination] = weight;
+    matriz[destination][source] = weigh;
 	}
 
 	/**
@@ -37,8 +41,13 @@ public class DigraphAM extends Digraph {
 	* Para más información de las clases:
  	* @see <a href="https://docs.oracle.com/javase/8/docs/api/java/util/ArrayList.html"> Ver documentacion ArrayList </a>
 	*/
-	public ArrayList<Integer> getSuccessors(int vertex) {
-		
+ public ArrayList<Integer> getSuccessors(int vertex) {
+		for(int i=0; i<size; i++){
+      for(int j=0; j<size; j++){
+        System.out.println(matriz[i][j]+"");
+      }
+      System.out.println();
+    }
 	}
 
 	/**
@@ -48,8 +57,8 @@ public class DigraphAM extends Digraph {
 	* @param destination  donde termina el arco
 	* @return un entero con dicho peso
 	*/	
-	public int getWeight(int source, int destination) {
-		
+ public int getWeight(int source, int destination) {
+		if()
 	}
 
 }
