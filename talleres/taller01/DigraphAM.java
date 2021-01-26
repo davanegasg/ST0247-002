@@ -31,7 +31,7 @@ public class DigraphAM extends Digraph {
      * @param weight el peso de la longitud entre source y destination
      */
     public void addArc(int source, int destination, int weight) {
-        matriz[source][destination] += weight;
+        matriz[source][destination] = weight;
 
     }
 
