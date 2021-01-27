@@ -4,7 +4,7 @@ import java.io.*;
 /**
  * Implementacion de un grafo dirigido usando listas de adyacencia
  *
- * @author Jacobo Rave Londoño, Diego Alejandro Vanegasz Mauricio Toro
+ * @author Mauricio Toro, Mateo Agudelo, <su nombre>
  */
 public class DigraphAL extends Digraph {
     LinkedList<Pair<Integer,Integer>> lista[];
@@ -54,7 +54,7 @@ public class DigraphAL extends Digraph {
                 if(sucesores == null){
                     sucesores = new ArrayList<Integer>();
                 }
-                sucesores.add((Integer)p.first,(Integer)p.first);  
+                sucesores.add((Integer)p.first);  
             }            
         }        
         return sucesores;
