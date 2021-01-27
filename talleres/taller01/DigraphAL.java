@@ -16,6 +16,7 @@ public class DigraphAL extends Digraph {
      */
     public DigraphAL(int size) {
         super(size);
+        this.size = size;
         this.lista = new LinkedList[size];
     }
 
@@ -47,12 +48,13 @@ public class DigraphAL extends Digraph {
         ArrayList<Integer> sucesores = null;
         LinkedList<Pair<Integer, Integer>> filaSucesores = this.lista[vertex];
 
+       
         if (filaSucesores != null){
             for(Pair p: filaSucesores){
                 if(sucesores == null){
                     sucesores = new ArrayList<Integer>();
                 }
-                sucesores.add((Integer)p.first,(Integer)p.second);  
+                sucesores.add((Integer)p.first,(Integer)p.first);  
             }            
         }        
         return sucesores;
