@@ -47,10 +47,11 @@ public class DigraphAM extends Digraph {
     public ArrayList<Integer> getSuccessors(int vertex) {
 
         ArrayList<Integer> Succesors = new ArrayList<>();
+        ArrayList<Integer> SuccesorsReal = new ArrayList<>();
         ArrayList<Integer> SuccesorsD = new ArrayList<>();
 
         for(int i = 0; i<this.size; i++){
-          
+            //int a = matriz[vertex][i];
             Succesors.add(matriz[vertex][i]);
             if(Succesors.get(i)!=0){
 
