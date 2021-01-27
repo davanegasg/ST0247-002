@@ -15,6 +15,7 @@ public class DigraphAM extends Digraph {
      */
     public DigraphAM(int size) {
         super(size);
+        this.size = size;
         matriz= new int[size][size];
         for(int i=0; i < size ; i++){
             for(int j=0; j < size; j++){
@@ -25,7 +26,7 @@ public class DigraphAM extends Digraph {
 
     /**
      * Metodo para añadir un arco nuevo, donde se representa cada nodo con un entero
-     * y se le asigna un peso a la longitud entre un nodo fuente y uno destino	
+     * y se le asigna un peso a la longitud entre un nodo fuente y uno destino  
      * @param source desde donde se hara el arco
      * @param destination hacia donde va el arco
      * @param weight el peso de la longitud entre source y destination
@@ -45,23 +46,33 @@ public class DigraphAM extends Digraph {
      */
     public ArrayList<Integer> getSuccessors(int vertex) {
 
-        ArrayList<Integer> Succesors = null;
-        ArrayList<Integer> SuccesorsReal = null;
-
-        Succesors = new ArrayList<>();
-        SuccesorsReal = new ArrayList<>();
-        for(int i = 0; i<3; i++){
-
+        ArrayList<Integer> Succesors = new ArrayList<>();
+        ArrayList<Integer> SuccesorsReal = new ArrayList<>();
+        ArrayList<Integer> SuccesorsD = new ArrayList<>();
+        
+        for(int i = 0; i<this.size-1; i++){
+            //int a = matriz[vertex][i];
             Succesors.add(matriz[vertex][i]);
-
+                if(Succesors.get(i)!=0){
+                    
+                    SuccesorsD.add(i);
+                }
+               
         }
-        for(int i = 0; i<Succesors.size()-1;i++){
-            if(Succesors.get(i)!=0){
-                SuccesorsReal.add(Succesors.get(i));
+
+        return SuccesorsD;
+
+    }
+
+    public void imprimir(){
+        for (int x=0; x < matriz.length; x++) {
+            System.out.print("|");
+            for (int y=0; y < matriz[x].length; y++) {
+                System.out.print (matriz[x][y]);
+                if (y!=matriz[x].length-1) System.out.print("\t");
             }
+            System.out.println("|");
         }
-        return SuccesorsReal;
-
     }
 
     /**
@@ -70,7 +81,7 @@ public class DigraphAM extends Digraph {
      * @param source desde donde inicia el arco
      * @param destination  donde termina el arco
      * @return un entero con dicho peso
-     */	
+     */ 
     public int getWeight(int source, int destination) {
         return matriz[source][destination]; 
     }
