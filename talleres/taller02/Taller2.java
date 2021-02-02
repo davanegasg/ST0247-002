@@ -27,10 +27,8 @@ public class Taller2
         }          
 
     }
-    
-}
 
-public static LinkedList<String> permutations(String s) {
+    public static LinkedList<String> permutations(String s) {
         LinkedList<String> respuesta = new LinkedList<String>();
         permutations("", s, respuesta);
         //System.out.print(respuesta);
@@ -38,7 +36,7 @@ public static LinkedList<String> permutations(String s) {
     }
 
     private static void permutations(String loQueLlevo, String loQueMeFalta, LinkedList<String> list) {
-        
+
         if(loQueMeFalta.equals("")){
             list.add(loQueLlevo);
 
@@ -46,5 +44,8 @@ public static LinkedList<String> permutations(String s) {
             for(int i = 0 ; i<loQueMeFalta.length(); i++)
                 permutations(loQueLlevo + loQueMeFalta.charAt(i), loQueMeFalta.replaceFirst(String.valueOf(loQueMeFalta.charAt(i)), ""), list);
 
-        }          
+        }
+
     }
+
+}
