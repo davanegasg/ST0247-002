@@ -3,7 +3,7 @@ import java.util.*;
 /**
  * Write a description of class Permutation here.
  * 
- * @author (your name) 
+ * @author (Diego Alejandro Vanegas, Jacobo Rave Londoño) 
  * @version (a version number or a date)
  */
 public class Taller2
