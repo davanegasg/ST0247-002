@@ -31,7 +31,7 @@ public class Taller2
     public static LinkedList<String> permutations(String s) {
         LinkedList<String> respuesta = new LinkedList<String>();
         permutations("", s, respuesta);
-        //System.out.print(respuesta);
+        System.out.print(respuesta);
         return respuesta;
     }
 
