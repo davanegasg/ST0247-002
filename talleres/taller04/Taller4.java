@@ -60,8 +60,15 @@ public class Taller4 {
      * @param fin nodo donde termina el recorrido
      * @return cual es el costo que tiene ir desde inicio a fin
      */
-    public static int costoMinimo(Digraph g, int inicio, int fin) {
-        ArrayList<Integer> next = g.getSuccessors(source);
+    public static ArrayList lowCostPathDFS(Graph g, int source, int destination){
+        boolean [] checked = new boolean[g.size()+1];
+        ArrayList<ArrayList<Integer>> ruta = new ArrayList();
+        return lowCostPathAux(g, source, destination, checked, ruta);
+    }
+
+    private static ArrayList lowCostPathAux(Graph g, int source, int destination, boolean[] checked, ArrayList ruta){
+
+                        ArrayList<Integer> next = g.getSuccessors(source);
         next.remove((Integer)source);
         
         checked[source] = true;
@@ -87,6 +94,7 @@ public class Taller4 {
         return answer;
   }
 
+    
     
 
 }
