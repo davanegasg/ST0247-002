@@ -4,7 +4,7 @@ import java.util.Collections;
 /**
  * Implementacion de un grafo dirigido usando listas de adyacencia
  *
- * @author Mauricio Toro, Mateo Agudelo,
+ * @author Jacobo Rave & Diego Vanegas
  */
 public class DigraphAL extends Digraph {
 
