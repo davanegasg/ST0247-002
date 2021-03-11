@@ -17,7 +17,7 @@ public class Main{
      */	
     public static void main(String args[]){
 
-     int[] a = nReinas(10);
+     int[] a = nReinas(9);
 
      imprimirTablero(a);
     
