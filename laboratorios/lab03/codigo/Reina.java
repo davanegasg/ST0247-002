@@ -17,8 +17,10 @@ public class Main{
      */	
     public static void main(String args[]){
 
-     boolean a = nReinas(4);
-     System.out.print(a);
+     int[] a = nReinas(10);
+
+     imprimirTablero(a);
+    
 
     }
 
@@ -42,8 +44,11 @@ public class Main{
      * @param  n numero de reinas
      * @return numero de soluciones
      */	
-    public static boolean nReinas(int n) {
-        return nReinas(0, n, new int[n]);
+    public static int[] nReinas(int n) {
+     int tablero[] = new int[n];
+
+      boolean answer = nReinas(0, n, tablero);
+        return tablero;
     }
 
     /**
@@ -76,6 +81,10 @@ public class Main{
 
 
     public static void imprimirTablero(int[] tablero) {
+      if(tablero.length==2||tablero.length==3){
+        System.out.print("Imposible");
+        return;
+      }
         int n = tablero.length;
         System.out.print("    ");
         for (int i = 0; i < n; ++i)
