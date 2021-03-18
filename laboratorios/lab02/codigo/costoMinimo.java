@@ -1,4 +1,22 @@
-public static ArrayList lowCostPathDFS(Graph g, int source, int destination){
+import java.util.ArrayList;
+
+/**
+ * Clase en la cual se implementan los metodos del Taller 4
+ * 
+ * @author Mauricio Toro, Andres Paez
+ */
+public class CostoMinimo {
+
+   
+
+    /*** Metodo que recorre el grafo por medio de dfs teniendo en cuenta que
+     * se quiere encontrar el de menor costo
+     * @param g grafo dado 
+     * @param inicio nodo desde el cual empieza el recorrido 
+     * @param fin nodo donde termina el recorrido
+     * @return cual es el costo que tiene ir desde inicio a fin
+     */
+    public static ArrayList lowCostPathDFS(Graph g, int source, int destination){
         boolean [] checked = new boolean[g.size()+1];
         ArrayList<ArrayList<Integer>> ruta = new ArrayList();
         return lowCostPathAux(g, source, destination, checked, ruta);
@@ -31,3 +49,8 @@ public static ArrayList lowCostPathDFS(Graph g, int source, int destination){
         }
         return answer;
   }
+
+    
+    
+
+}
