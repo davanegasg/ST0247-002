@@ -59,12 +59,12 @@ public class Taller6 {
 
 
 	    public static int nodoPesoMinimo(ArrayList<Integer> sucesores, Digraph g, int v, boolean[] visitados){
-		int pesoMinimo = Integer.MAX_VALUE;
+		int pesominimo = Integer.MAX_VALUE;
 		int nodo = 0;
 		for(int i = 0; i < sucesores.size(); i++){
 		    if(visitados[sucesores.get(i)] == false){
-			if(pesoMinimo > g.getWeight(v, sucesores.get(i))){
-			    pesoMinimo = g.getWeight(v, sucesores.get(i));
+			if(pesominimo > g.getWeight(v, sucesores.get(i))){
+			    pesominimo = g.getWeight(v, sucesores.get(i));
 			    nodo = sucesores.get(i);
 			}
 		    }
