@@ -28,5 +28,18 @@ public class Taller6 {
 	public static int recorrido(Digraph g) {
 	
 	}
+	
+	public static int PesoMinimo(ArrayList<Integer> sucesor, Digraph g, int v, boolean[] visitados){
+        int pesomin = Integer.MAX_VALUE;
+        int nodo = 0;
+        for(int i = 0; i < sucesor.size(); i++){
+            if(visitados[sucesor.get(i)] == false){
+                if(pesomin > g.getWeight(v, sucesor.get(i))){
+                    pesomin = g.getWeight(v, sucesor.get(i));
+                    nodo = sucesores.get(i);
+                }
+            }
+        }
+        return nodo;
 
 }
