@@ -6,24 +6,20 @@ import java.io.IOException;
 
 public class Lector{
     private static Scanner scan;
+    cVehicle v;
+    ArrayList<Coordinates> c = new ArrayList<>();
+    Coordinates cor;
+    ArrayList<l> time1 = new ArrayList<>();
+    l timeL;
+    ArrayList<g> levelWatts1 = new ArrayList<>();
+    g LvlW;
+
     /**
      * El método leerDatos instancia la clase Dato y lee los datos del archivo uno por uno para
      * introducirlos en un array nuevo y lo retorna despues.
      * @return datos (lista de datos)
      */
-    public static void leer(){
-        ArrayList<cVehicle> datos=new ArrayList<>();
-        cVehicle v;
-        ArrayList<Coordinates> c = new ArrayList<>();
-        Coordinates cor;
-        ArrayList<l> time1 = new ArrayList<>();
-        l timeL;
-        ArrayList<g> levelWatts1 = new ArrayList<>();
-        g LvlW;
-
-        System.out.println("Por favor inserta la ruta del archivo: ");
-        scan = new Scanner(System.in);
-        String ruta = scan.nextLine();//NQ20200429-30.txt
+    public void leer(String ruta){
         File archivo=null;
         try{
             archivo= new File(ruta);
@@ -45,8 +41,8 @@ public class Lector{
                         datosVehic.add(Double.parseDouble(arreglo[2]));
                     }
                     if(arreglo[0].equals("Coordinates")){
-                        v = crearVehiculo(datosVehic);
-                        datos.add(v);
+                        this.v = crearVehiculo(datosVehic);
+                        //datos.add(v);
                         state = 1;
                     }
                     break;
@@ -97,6 +93,7 @@ public class Lector{
             }
         }catch(FileNotFoundException e){
             System.out.println(e.getMessage());
+            
         }
     }
 
@@ -135,11 +132,16 @@ public class Lector{
         l Tiempos = new l(tSlow, tMedium, tFast);
         return Tiempos;
     }
+
     public static g asignarG(ArrayList<Integer> levelWatts){
         int bSlow = Integer.parseInt(String.valueOf(levelWatts.get(0)).replace(".0", ""));
         int bMedium = Integer.parseInt(String.valueOf(levelWatts.get(1)).replace(".0", ""));
         int bFast = Integer.parseInt(String.valueOf(levelWatts.get(2)).replace(".0", ""));
         g Niveles = new g(bSlow, bMedium, bFast);
         return Niveles;
+    }
+
+    public ArrayList<Coordinates> getC(){
+        return this.c;
     }
 }
