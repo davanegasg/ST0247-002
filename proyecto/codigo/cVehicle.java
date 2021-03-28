@@ -10,7 +10,7 @@ public class cVehicle
     int m; //Número total de clientes
     int u; //Número total de estaciones de carga
     int breaks; //Número de puntos de soporte de la función de la carga de la batería
-    double r; //Tasa de cosumo Watts/Hora
+    double r; //Tasa de cosumo Watts/Km
     double speed; //Velocidad Km/h
     double Tmax; //Tiempo máximo de duración del vehículo en horas
     double Smax; //Tiempo máximo de carga en horas en la estación más lenta  
