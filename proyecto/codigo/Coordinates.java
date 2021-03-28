@@ -1,4 +1,4 @@
-import java.util.*;
+
 /**
  * Write a description of class Coordinates here.
  * 
@@ -14,6 +14,8 @@ public class Coordinates
     String tNode; //Tipo de nodo
     int tStation; //Tipo de estación
 
+    public Coordinates(){
+    }
     public Coordinates(int idNode, String nNode, double x, double y, String tNode, int tStation){
         this.idNode = idNode; 
         this.nNode = nNode;   
