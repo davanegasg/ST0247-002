@@ -112,23 +112,6 @@ public class Principal
         //grafito.imprimir();
     }
 
-    public static Coordinates asignarCor(ArrayList<Integer> coordi){
-        int idNode = Integer.parseInt(String.valueOf(coordi.get(0)).replace(".0", ""));
-        String nNode = String.valueOf(coordi.get(1));   
-        double x = Double.parseDouble(String.valueOf(coordi.get(2))); 
-        double y = Double.parseDouble(String.valueOf(coordi.get(3))); 
-        String tNode = String.valueOf(coordi.get(4));  
-        int tStation = Integer.parseInt(String.valueOf(coordi.get(5)).replace(".0", ""));
-
-        Coordinates Coordenadas = new Coordinates(idNode, nNode, x, y, tNode, tStation);
-        return Coordenadas;
-    }
-
-    public static void convertirTXTtoCVS(String nombre)throws Exception{
-        
-
-    }
-
     public static void guardarArchivoCSV(ArrayList<Coordinates> datos)throws IOException{
         Scanner scan = new Scanner(System.in);
         File archivo=null;
