@@ -1,0 +1,14 @@
+4.1)	i = j
+4.2)	min > adjacencyMatrix[element][i]
+
+4.4.1) 	10. temp/2
+4.4.2)	11. temp + minimo
+4.4.3) 	Opc. B
+
+4.5.1) 	Opc. D
+4.5.2)	Al hacer mergeSort al conjunto de n numeros, podemos asegurar que los menores queden en las primeras posiciones. La suma de los primeros k numeros, organizados de menor a mayor siempre será la suma minima con k numeros. La complejidad de hacer mergeSort es de O(nlog n), y el acceso a los k numeros es de O(k), pero por multiplicidad la complejidad final del algoritmo es de O(nlog n).
+
+4.6.1)	i+1
+4.6.2)	res+1
+4.6.3)	last = i
+4.6.4)	2
