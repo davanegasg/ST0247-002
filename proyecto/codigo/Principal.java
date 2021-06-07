@@ -14,9 +14,19 @@ public class Principal
     static ArrayList<Integer> ruta = new ArrayList<>();
     static double nCarros = 0;
     static List<LinkedList<Integer>> rutasCarros = new ArrayList<LinkedList<Integer>>();
+    static List<LinkedList<Integer>> rutasCarrosP = new ArrayList<LinkedList<Integer>>();
+    static List<LinkedList<Integer>> rutasBateria = new ArrayList<LinkedList<Integer>>();
     static List<LinkedList<Double>> tCarros = new ArrayList<LinkedList<Double>>();
+    static List<LinkedList<Double>> dCarros = new ArrayList<LinkedList<Double>>();
+    static List<LinkedList<Double>> tCarrosP = new ArrayList<LinkedList<Double>>();
+    static List<LinkedList<Double>> dCarrosP = new ArrayList<LinkedList<Double>>();
+    static List<LinkedList<Double>> tCarrosB = new ArrayList<LinkedList<Double>>();
+    static List<LinkedList<Double>> dCarrosB = new ArrayList<LinkedList<Double>>();
     static double tiempo = 0;
+    static double distancia = 0;
     static String name;
+    static double bateria;
+    static final int r = 125;
     public static void main(String[] args) throws IOException, InterruptedException{
         new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
         Scanner scan  = new Scanner(System.in); 
@@ -27,6 +37,7 @@ public class Principal
         leerDatos(lectorcito, archivo+".txt");
         ArrayList<Coordinates> datos = lectorcito.getC();
         cVehicle carrito = lectorcito.v;
+        bateria = carrito.getQ();
         grafito = new GrafoAM(datos.size());
         visitados = new boolean[grafito.size];
         visitados1 = new boolean[grafito.size];
@@ -36,8 +47,9 @@ public class Principal
         generarGrafoDT(datos, carrito);
         calcularRuta(datos, carrito);
         tiempo = calcularTiempo(datos, carrito, ruta);
+        distancia = calcularDistancia(datos, carrito, ruta);
         generarCarros(carrito.m);
-        asignarRutas(ruta, ItoD(nCarros));
+        asignarRutas(ruta, ItoD(nCarros), datos);
         boolean salir = false;
         while(!salir){
             System.out.println("-----------¿Qué quieres hacer?-----------");
@@ -61,6 +73,7 @@ public class Principal
                     case 2:
                     new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
                     imprimirTiempo(tiempo);
+                    imprimirDistancia(distancia);
                     System.out.println("");
                     System.out.println("");
                     break;
@@ -85,6 +98,13 @@ public class Principal
                     case 6:
                     new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
                     guardarArchivoCSV(datos);
+                    System.out.println("");
+                    System.out.println("");
+                    break;
+                    case 7:
+                    new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+                    asignarCargaBateria(rutasCarros, datos);
+                    imprimirRGB(rutasBateria);
                     System.out.println("");
                     System.out.println("");
                     break;
@@ -182,6 +202,25 @@ public class Principal
         }
     }
 
+    public static void imprimirDistancia(double distancia){
+        System.out.println("La distancia estimada para esta ruta es: "+distancia + " Km");
+    }
+
+    public static double calcularDistancia(ArrayList<Coordinates> datos, cVehicle carrito, ArrayList<Integer> ruta){
+        int pivote1= datos.get(0).getIdNode();
+        double dist = 0;
+        double distan = 0;
+        double distancia = 0;
+        for(int i = 0; i<carrito.m;i++){
+            dist = generarDistaciaTotal(pivote1, datos);
+            pivote1 = ruta.get(i+1);
+            distancia = grafito.getDistace(pivote1, 0);
+            distan+=dist;
+        }         
+        double distanciaTotal= distan+distancia;
+        return distanciaTotal;
+    }
+
     public static double calcularTiempo(ArrayList<Coordinates> datos, cVehicle carrito, ArrayList<Integer> ruta){
         int pivote1= datos.get(0).getIdNode();
         double tiem = 0;
@@ -204,6 +243,22 @@ public class Principal
         }
         buffer = buffer + "0" + "}";
         System.out.println("La mejor ruta es: "+buffer);
+    }
+
+    public static double generarDistaciaTotal(int idNodoInicial, ArrayList<Coordinates> datos){
+        double distanciaTotal = 0;
+        int auxId = 0;
+        for(Coordinates o: datos){
+            if(o.getIdNode() == idNodoInicial){
+                continue;
+            } else if((!visitados1[o.getIdNode()]) && (o.getTnode().equals("c"))){
+                distanciaTotal += grafito.getDistace(idNodoInicial, o.getIdNode());
+                auxId = o.getIdNode();
+                break;
+            }
+        }
+        visitados1[auxId]=true;
+        return distanciaTotal;
     }
 
     public static double generarTiempoTotal(int idNodoInicial, ArrayList<Coordinates> datos){
@@ -234,6 +289,29 @@ public class Principal
         System.out.println("El número de carros que usaremos para las entregas es: "+n);
     }
 
+    public static int bestStation(int idNodoInicial, ArrayList<Coordinates> datos, int tipoSolicitud){
+        double auxTime1 = Integer.MAX_VALUE;
+        int auxT = 0;
+        int auxID = 0;
+        int respuesta = 0;
+        for(Coordinates o: datos){
+            if(idNodoInicial == o.getIdNode()){
+                continue;
+            }else if((grafito.getTime(idNodoInicial, o.getIdNode())<auxTime1) && o.getTnode().equals("s") && (o.getTstation() == 0 
+                || o.getTstation() == 1 || o.getTstation() == 2 )){
+                auxTime1 = grafito.getTime(idNodoInicial, o.getIdNode());
+                auxT = o.getTstation();
+                auxID = o.getIdNode();
+            }
+        }    
+        if(tipoSolicitud==0){
+            respuesta = auxID;
+        } else if (tipoSolicitud == 1){
+            respuesta = auxT; 
+        }
+        return respuesta;
+    }
+
     public static int bestClient(int idNodoInicial, ArrayList<Coordinates> datos){
         double auxTime = Integer.MAX_VALUE;
         int auxId = 0;
@@ -243,7 +321,6 @@ public class Principal
             }else if(!visitados[o.getIdNode()] && (grafito.getTime(idNodoInicial, o.getIdNode())<auxTime) && o.getTnode().equals("c")){
                 auxTime = grafito.getTime(idNodoInicial, o.getIdNode());
                 auxId = o.getIdNode();
-
             }
         }        
         visitados[auxId]=true;
@@ -265,16 +342,35 @@ public class Principal
         return t;
     }
 
-    public static List<LinkedList<Integer>> asignarRutas(ArrayList<Integer> rutas, int nCarros){
+    public static double calcularDC(int source, int destination){
+        double t = grafito.getDistace(source, destination);
+        return t;
+    }
+
+    public static double DevuelvaseD(int source){
+        double t = grafito.getDistace(source, 0);
+        return t;
+    }
+
+    public static double ComienceD(int destination){
+        double t = grafito.getDistace(0, destination);
+        return t;
+    }
+
+    public static List<LinkedList<Integer>> asignarRutas(ArrayList<Integer> rutas, int nCarros, ArrayList<Coordinates> datos){
         int max = rutas.size()-1;
         int maxx = max+1;
         int k = 0;
         int j = 1; //Ruta
+        int sCarga = 0;
         double demora = 0;
+        double distancia = 0;
         for(int i = 0; i<nCarros; i++){
             rutasCarros.add(new LinkedList<Integer>());
             tCarros.add(new LinkedList<Double>());
-            demora = Comience(j);
+            dCarros.add(new LinkedList<Double>());
+            demora = Comience(rutas.get(j));
+            distancia = ComienceD(rutas.get(j));
             k = 0;
             while(k<4){
                 if(max<4){
@@ -282,9 +378,11 @@ public class Principal
                         break;
                     }
                     if(k<1){
-                        demora += calcularTC(j, j+1);
+                        demora += calcularTC(rutas.get(j), rutas.get(j+1));
+                        distancia+=calcularDC(rutas.get(j),rutas.get(j+1));
                     } else {
-                        demora += Devuelvase(j);
+                        demora += Devuelvase(rutas.get(j));
+                        distancia+=DevuelvaseD(rutas.get(j));
                     }
                     if(demora<10){
                         rutasCarros.get(i).add(rutas.get(j));
@@ -296,25 +394,172 @@ public class Principal
                         break;
                     }
                     if(k<3){
-                        demora+=calcularTC(j, j+1);
+                        demora+=calcularTC(rutas.get(j), rutas.get(j+1));
+                        distancia+=calcularDC(rutas.get(j),rutas.get(j+1));
                     } else {
-                        demora+= Devuelvase(j);
+                        demora+= Devuelvase(rutas.get(j));
+                        distancia+=DevuelvaseD(rutas.get(j));
                     }
                     if(demora<10){
                         rutasCarros.get(i).add(rutas.get(j));}
                     k++;
                     j++;
                 }
-
             }
             tCarros.get(i).add(demora);
+            dCarros.get(i).add(distancia);
             demora = 0;
+            distancia = 0;
         }
         return rutasCarros;
     }
 
+    public static List<LinkedList<Integer>> asignarCargaBateria(List<LinkedList<Integer>> rutasCarros, ArrayList<Coordinates> Datos){
+        double distancia = 0;
+        double distanciaTemporal = 0;
+        int idStation = 0;
+        int tStation = 0;
+        boolean prueba = false;
+        double tiempo = 0;
+        double tiempoTemporal = 0;
+        double bateriaGastada = 0;
+        double bateriaSobrante = 0;
+        double tiempoRecargar = 0;
+        clonar(rutasCarros);
+        for(int i = 0; i<nCarros; i++){
+            tCarrosB.add(new LinkedList<Double>());
+            dCarrosB.add(new LinkedList<Double>());
+            if(dCarros.get(i).get(0)<128){
+                tCarrosB.get(i).add(tCarros.get(i).get(0));
+                dCarrosB.get(i).add(dCarros.get(i).get(0));
+                continue;
+            } else {
+                for(int j = 0; j<3; j++){
+                    if(j == 0){ //Primera vez
+                        distancia+= ComienceD(rutasCarros.get(i).get(j));
+                        tiempo+= Comience(rutasCarros.get(i).get(j));
+                        if(distancia<128){
+                            prueba = true;
+                            distanciaTemporal = distancia;
+                            tiempoTemporal = tiempo;
+                        } else {prueba = false;}
+                    } else {
+                        distanciaTemporal += calcularDC(rutasCarros.get(i).get(j), rutasCarros.get(i).get(j+1));
+                        tiempoTemporal+= calcularTC(rutasCarros.get(i).get(j), rutasCarros.get(i).get(j+1));
+                        if(distanciaTemporal<128){
+                            prueba = true;
+                            distancia = distanciaTemporal;
+                            tiempo = tiempoTemporal;
+                        } else {prueba = false;}
+                        if(prueba == false){
+                            idStation = bestStation(rutasCarros.get(i).get(j), Datos, 0);
+                            tStation = bestStation(rutasCarros.get(i).get(j), Datos, 1);
+                            distancia +=calcularDC(rutasCarros.get(i).get(j), idStation);
+                            tiempo+=calcularTC(rutasCarros.get(i).get(j), idStation);
+                            if(distancia<128){
+                                rutasBateria.get(i).add(j+1, idStation);
+                                switch(tStation){
+                                    case 0:
+                                    bateriaGastada = distancia*125;
+                                    bateriaSobrante = 16000-bateriaGastada;
+                                    tiempoRecargar = bateriaGastada/31373;
+                                    tiempo+=tiempoRecargar;
+                                    break;
+                                    case 1:
+                                    bateriaGastada = distancia*125;
+                                    bateriaSobrante = 16000-bateriaGastada;
+                                    tiempoRecargar = bateriaGastada/15842;
+                                    tiempo+=tiempoRecargar;
+                                    break;
+                                    case 2:
+                                    bateriaGastada = distancia*125;
+                                    bateriaSobrante = 16000-bateriaGastada;
+                                    tiempoRecargar = bateriaGastada/7960.2;
+                                    tiempo+=tiempoRecargar;
+                                    break;
+                                }
+                                distanciaTemporal = 0;
+                            }
+                        }
+                    }
+                }
+                if(prueba == true){
+                    idStation = bestStation(rutasCarros.get(i).get(3), Datos, 0);
+                    tStation = bestStation(rutasCarros.get(i).get(3), Datos, 1);
+                    distancia+=calcularDC(rutasCarros.get(i).get(3), idStation);
+                    if(distancia<128){
+                        rutasBateria.get(i).add(3, idStation);
+                        switch(tStation){
+                            case 0:
+                            bateriaGastada = distancia*125;
+                            bateriaSobrante = 16000-bateriaGastada;
+                            tiempoRecargar = bateriaGastada/31373;
+                            tiempo+=tiempoRecargar;
+                            break;
+                            case 1:
+                            bateriaGastada = distancia*125;
+                            bateriaSobrante = 16000-bateriaGastada;
+                            tiempoRecargar = bateriaGastada/15842;
+                            tiempo+=tiempoRecargar;
+                            break;
+                            case 2:
+                            bateriaGastada = distancia*125;
+                            bateriaSobrante = 16000-bateriaGastada;
+                            tiempoRecargar = bateriaGastada/7960.2;
+                            tiempo+=tiempoRecargar;
+                            break;
+                        }
+                        distancia += DevuelvaseD(idStation);
+                        tiempo += Devuelvase(idStation);}
+                } else {
+                    distancia += DevuelvaseD(idStation);
+                    tiempo += Devuelvase(idStation);}
+            }
+            dCarrosB.get(i).add(distancia);
+            tCarrosB.get(i).add(tiempo);
+            tiempoTemporal = 0;
+            distanciaTemporal = 0;
+            tiempo = 0;
+            distancia = 0;
+        }
+
+        return rutasBateria;
+    }
+
+    public static void clonar(List<LinkedList<Integer>> rutas){
+        for(int i = 0; i<rutas.size();i++){
+            rutasBateria.add(new LinkedList<Integer>());
+            for(int j = 0; j<4;j++){
+                rutasBateria.get(i).add(rutas.get(i).get(j));
+            }
+        }
+    }
+
+    public static void imprimirRGB(List<LinkedList<Integer>> rutasBateria){
+        String buffer = "{Deposito -> ";
+        int nR = ruta.size()-1;
+        for(int i = 0; i<nCarros;i++){
+            if(nR <4){
+                for(int j = 0; j<nR; j++){
+                    buffer = buffer +rutasBateria.get(i).get(j) + " -> ";
+                }
+                int x = i+1;
+                buffer = buffer + "Deposito" + "} " + "y su tiempo es: " + tCarrosB.get(i) + " Horas y se recorre: " + dCarrosB.get(i) + " Km";
+                System.out.println("La mejor ruta para el carro " + x + " es: " +buffer);
+                buffer = "{Deposito -> ";  
+            } else {
+                for(int j = 0; j<rutasBateria.get(i).size(); j++){
+                    buffer = buffer + rutasBateria.get(i).get(j) + " -> ";
+                }
+                int x = i+1;
+                buffer = buffer + "Deposito" + "} " + "y su tiempo es: " + tCarrosB.get(i) + " Horas y se recorre: " + dCarrosB.get(i) + " Km";
+                System.out.println("La mejor ruta para el carro " + x + " es: " +buffer);
+                buffer = "{Deposito -> "; }
+        }
+    }
+
     public static void imprimirRG(List<LinkedList<Integer>> rutasCarros){
-        String buffer = "{Deposito -> "; 
+        String buffer = "{Deposito -> ";
         int nR = ruta.size()-1;
         for(int i = 0; i<nCarros;i++){
             if(nR <4){
@@ -322,7 +567,7 @@ public class Principal
                     buffer = buffer +rutasCarros.get(i).get(j) + " -> ";
                 }
                 int x = i+1;
-                buffer = buffer + "Deposito" + "} " + "y su tiempo es: " + tCarros.get(i) + " Horas" ;
+                buffer = buffer + "Deposito" + "} " + "y su tiempo es: " + tCarros.get(i) + " Horas y se recorre: " + dCarros.get(i) + " Km";
                 System.out.println("La mejor ruta para el carro " + x + " es: " +buffer);
                 buffer = "{Deposito -> ";  
             } else {
@@ -330,7 +575,7 @@ public class Principal
                     buffer = buffer + rutasCarros.get(i).get(j) + " -> ";
                 }
                 int x = i+1;
-                buffer = buffer + "Deposito" + "} " + "y su tiempo es: " + tCarros.get(i) + " Horas";
+                buffer = buffer + "Deposito" + "} " + "y su tiempo es: " + tCarros.get(i) + " Horas y se recorre: " + dCarros.get(i) + " Km";
                 System.out.println("La mejor ruta para el carro " + x + " es: " +buffer);
                 buffer = "{Deposito -> "; }
         }
