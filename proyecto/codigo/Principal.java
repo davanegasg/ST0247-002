@@ -12,7 +12,9 @@ public class Principal
     static boolean[] visitados;
     static boolean[] visitados1;
     static ArrayList<Integer> ruta = new ArrayList<>();
+    static int contador = 0;
     static double nCarros = 0;
+    static List<List<List<Integer>>> resultss = new ArrayList<List<List<Integer>>>();
     static List<LinkedList<Integer>> rutasCarros = new ArrayList<LinkedList<Integer>>();
     static List<LinkedList<Integer>> rutasCarrosP = new ArrayList<LinkedList<Integer>>();
     static List<LinkedList<Integer>> rutasBateria = new ArrayList<LinkedList<Integer>>();
@@ -84,8 +86,14 @@ public class Principal
                     System.out.println("");
                     break;
                     case 4:
+                    // new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+                    // imprimirRG(rutasCarros);
+                    // System.out.println("");
+                    // System.out.println("");
                     new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
-                    imprimirRG(rutasCarros);
+                    permutaciones(rutasCarros, datos);
+                    asignarCargaBateria(rutasCarrosP, datos);
+                    imprimirRGB(rutasBateria);
                     System.out.println("");
                     System.out.println("");
                     break;
@@ -101,13 +109,14 @@ public class Principal
                     System.out.println("");
                     System.out.println("");
                     break;
-                    case 7:
-                    new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
-                    asignarCargaBateria(rutasCarros, datos);
-                    imprimirRGB(rutasBateria);
-                    System.out.println("");
-                    System.out.println("");
-                    break;
+                    // case 7: //Caso de prueba
+                    // new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+                    // permutaciones(rutasCarros, datos);
+                    // asignarCargaBateria(rutasCarrosP, datos);
+                    // imprimirRGB(rutasBateria);
+                    // System.out.println("");
+                    // System.out.println("");
+                    // break;
                     case 0:
                     salir = true;
                     new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
@@ -414,6 +423,77 @@ public class Principal
         return rutasCarros;
     }
 
+    public static List<Integer> bestPermu(List<List<Integer>> resultados){
+        double mejorDistancia = Integer.MAX_VALUE;
+        double mejorTiempo = 0;
+        List<Integer> mejorRuta  = null;
+        for(List<Integer> ruta: resultados){
+            double distancia = 0;
+            double tiempo = 0;
+            distancia+= ComienceD(ruta.get(0));
+            distancia+= calcularDC(ruta.get(0), ruta.get(1));
+            distancia+= calcularDC(ruta.get(1), ruta.get(2));
+            distancia+= calcularDC(ruta.get(2), ruta.get(3));
+            distancia+= DevuelvaseD(ruta.get(3));
+            tiempo+= Comience(ruta.get(0));
+            tiempo+= calcularTC(ruta.get(0), ruta.get(1));
+            tiempo+= calcularTC(ruta.get(1), ruta.get(2));
+            tiempo+= calcularTC(ruta.get(2), ruta.get(3));
+            tiempo+= Devuelvase(ruta.get(3));
+            if(distancia<mejorDistancia){
+                mejorDistancia = distancia;
+                mejorTiempo = tiempo;
+                mejorRuta = ruta;
+            }
+        }
+        tCarrosP.add(new LinkedList<Double>());
+        dCarrosP.add(new LinkedList<Double>());
+        dCarrosP.get(contador).add(mejorDistancia);
+        tCarrosP.get(contador).add(mejorTiempo);
+        contador++;
+        return mejorRuta;
+    }
+
+    public static List<Integer> permute(int[] nums) {
+        List<List<Integer>> results = new ArrayList<List<Integer>>();
+        if (nums == null || nums.length == 0) {
+
+        }
+        List<Integer> result = new ArrayList<>();
+        dfs(nums, results, result);
+        List<Integer> resulto = bestPermu(results);
+        return resulto;
+    }
+
+    public static void dfs(int[] nums, List<List<Integer>> results, List<Integer> result) {
+        int distancia = 0;
+        if (nums.length == result.size()) {
+            List<Integer> temp = new ArrayList<>(result);
+            results.add(temp);
+        }        
+        for (int i=0; i<nums.length; i++) {
+            if (!result.contains(nums[i])) {
+                result.add(nums[i]);
+                dfs(nums, results, result);
+                result.remove(result.size() - 1);
+            }
+        }
+    }
+
+    public static List<LinkedList<Integer>> permutaciones(List<LinkedList<Integer>> rutasCarros, ArrayList<Coordinates> Datos){
+        int[] rutas = new int[4];
+        for(int i = 0; i<rutasCarros.size();i++){
+            rutasCarrosP.add(new LinkedList<Integer>());
+            for(int j = 0; j<4; j++){
+                rutas[j] = rutasCarros.get(i).get(j);
+            }
+            List<Integer> p = permute(rutas);
+            for(int x = 0; x<4;x++){
+                rutasCarrosP.get(i).add(p.get(x));}
+        }
+        return rutasCarrosP;
+    }
+
     public static List<LinkedList<Integer>> asignarCargaBateria(List<LinkedList<Integer>> rutasCarros, ArrayList<Coordinates> Datos){
         double distancia = 0;
         double distanciaTemporal = 0;
@@ -429,9 +509,9 @@ public class Principal
         for(int i = 0; i<nCarros; i++){
             tCarrosB.add(new LinkedList<Double>());
             dCarrosB.add(new LinkedList<Double>());
-            if(dCarros.get(i).get(0)<128){
-                tCarrosB.get(i).add(tCarros.get(i).get(0));
-                dCarrosB.get(i).add(dCarros.get(i).get(0));
+            if(dCarrosP.get(i).get(0)<128){
+                tCarrosB.get(i).add(tCarrosP.get(i).get(0));
+                dCarrosB.get(i).add(dCarrosP.get(i).get(0));
                 continue;
             } else {
                 for(int j = 0; j<3; j++){
