@@ -168,7 +168,7 @@ public class Principal
     }
 
     public static Lector leerDatos(Lector lectorcito, String rutaA){
-        lectorcito.leer("D:\\Escritorio\\Escritorio\\Universidad EAFIT\\Estructura de Datos\\Proyecto\\" + rutaA);
+        lectorcito.leer("C:\\Users\\jrave\\Desktop\\" + rutaA);
         return lectorcito;
     }
 
